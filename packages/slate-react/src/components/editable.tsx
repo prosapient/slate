@@ -106,6 +106,7 @@ export type EditableProps = {
   renderLeaf?: (props: RenderLeafProps) => JSX.Element
   renderPlaceholder?: (props: RenderPlaceholderProps) => JSX.Element
   scrollSelectionIntoView?: (editor: ReactEditor, domRange: DOMRange) => void
+  componentRef?: React.RefObject<HTMLElement>
   as?: React.ElementType
 } & React.TextareaHTMLAttributes<HTMLDivElement>
 
@@ -126,12 +127,13 @@ export const Editable = (props: EditableProps) => {
     scrollSelectionIntoView = defaultScrollSelectionIntoView,
     style = {},
     as: Component = 'div',
+    componentRef,
     ...attributes
   } = props
   const editor = useSlate()
   // Rerender editor when composition status changed
   const [isComposing, setIsComposing] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const ref = componentRef ?? useRef<HTMLDivElement>(null)
   const deferredOperations = useRef<DeferredOperation[]>([])
 
   // Update internal state on each render.
